@@ -1,0 +1,20 @@
+service: recipe-runner
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: prod
+  region: eu-west-2
+
+functions:
+  fetch-recipes:
+    handler: handler.fetchRecipes
+    events:
+      - http:
+          path: recipes
+          method: get
+    environment:
+      DB_HOSTNAME: ${ssm:/db_hostname~true}
+      DB_USERNAME: ${ssm:/db_username~true}
+      DB_PASSWORD: ${ssm:/db_password~true}
+      DB_DATABASE: recipe-runner
