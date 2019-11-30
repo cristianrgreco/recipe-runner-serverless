@@ -1,20 +1,5 @@
-const {MongoClient} = require('mongodb');
 const {isTokenValid} = require('./auth');
-const RecipeRepository = require('./RecipeRepository');
-
-const getDb = async () => {
-    const hostname = process.env['DB_HOSTNAME'];
-    const username = process.env['DB_USERNAME'];
-    const password = process.env['DB_PASSWORD'];
-    const database = process.env['DB_DATABASE'];
-
-    const url = `mongodb+srv://${username}:${password}@${hostname}/test?retryWrites=true&w=majority`;
-
-    const client = new MongoClient(url, {useUnifiedTopology: true});
-    await client.connect();
-
-    return client.db(database);
-};
+const {getDb, getRecipeRepository} = require('./db');
 
 const toRecipeDto = token => recipe => ({
     ...recipe,
@@ -23,10 +8,7 @@ const toRecipeDto = token => recipe => ({
 });
 
 const fetchRecipe = async event => {
-    const db = await getDb();
-    const collection = db.collection('recipes');
-    const recipeRepository = new RecipeRepository(collection);
-
+    const recipeRepository = getRecipeRepository(await getDb());
     const token = await isTokenValid(event.headers.Authorization);
 
     const recipeId = event.pathParameters.recipeId;
@@ -40,10 +22,7 @@ const fetchRecipe = async event => {
 };
 
 const fetchRecipes = async event => {
-    const db = await getDb();
-    const collection = db.collection('recipes');
-    const recipeRepository = new RecipeRepository(collection);
-
+    const recipeRepository = getRecipeRepository(await getDb());
     const token = await isTokenValid(event.headers.Authorization);
 
     const recipes = await recipeRepository.findAll();
@@ -56,9 +35,7 @@ const fetchRecipes = async event => {
 };
 
 const deleteRecipe = async event => {
-    const db = await getDb();
-    const collection = db.collection('recipes');
-    const recipeRepository = new RecipeRepository(collection);
+    const recipeRepository = getRecipeRepository(await getDb());
 
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {

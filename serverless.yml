@@ -13,19 +13,19 @@ provider:
 
 functions:
   fetch-recipe:
-    handler: handler.fetchRecipe
+    handler: src/handler.fetchRecipe
     events:
       - http:
           path: recipes/{recipeId}
           method: get
   fetch-recipes:
-    handler: handler.fetchRecipes
+    handler: src/handler.fetchRecipes
     events:
       - http:
           path: recipes
           method: get
   delete-recipe:
-    handler: handler.deleteRecipe
+    handler: src/handler.deleteRecipe
     events:
       - http:
           path: recipes/{recipeId}
