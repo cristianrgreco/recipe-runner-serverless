@@ -5,16 +5,28 @@ provider:
   runtime: nodejs12.x
   stage: prod
   region: eu-west-2
+  environment:
+    DB_HOSTNAME: ${ssm:/db_hostname~true}
+    DB_USERNAME: ${ssm:/db_username~true}
+    DB_PASSWORD: ${ssm:/db_password~true}
+    DB_DATABASE: recipe-runner
 
 functions:
+  fetch-recipe:
+    handler: handler.fetchRecipe
+    events:
+      - http:
+          path: recipes/{recipeId}
+          method: get
   fetch-recipes:
     handler: handler.fetchRecipes
     events:
       - http:
           path: recipes
           method: get
-    environment:
-      DB_HOSTNAME: ${ssm:/db_hostname~true}
-      DB_USERNAME: ${ssm:/db_username~true}
-      DB_PASSWORD: ${ssm:/db_password~true}
-      DB_DATABASE: recipe-runner
+  delete-recipe:
+    handler: handler.deleteRecipe
+    events:
+      - http:
+          path: recipes/{recipeId}
+          method: delete
