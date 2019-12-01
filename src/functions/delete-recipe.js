@@ -1,5 +1,6 @@
 const {isTokenValid} = require('../auth');
 const {connectToDatabase, getRecipeRepository} = require('../db');
+const corsHeaders = require('../cors-headers');
 
 module.exports.handler = async event => {
     const recipeRepository = getRecipeRepository(await connectToDatabase());
@@ -8,10 +9,7 @@ module.exports.handler = async event => {
     if (!token) {
         return {
             statusCode: 401,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': true,
-            }
+            headers: corsHeaders
         };
     }
 
@@ -21,10 +19,7 @@ module.exports.handler = async event => {
     if (token.email !== recipe.createdBy) {
         return {
             statusCode: 403,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': true,
-            }
+            headers: corsHeaders
         };
     }
 
@@ -32,9 +27,6 @@ module.exports.handler = async event => {
 
     return {
         statusCode: 204,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true,
-        }
+        headers: corsHeaders
     };
 };

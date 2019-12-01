@@ -1,5 +1,6 @@
 const {isTokenValid} = require('../auth');
 const {connectToDatabase, getRecipeRepository} = require('../db');
+const corsHeaders = require('../cors-headers');
 
 const createRecipeId = recipeName => {
     return recipeName
@@ -15,10 +16,7 @@ module.exports.handler = async event => {
     if (!token) {
         return {
             statusCode: 401,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': true
-            }
+            headers: corsHeaders
         };
     }
 
@@ -40,9 +38,7 @@ module.exports.handler = async event => {
         statusCode: 201,
         headers: {
             'Location': `/recipes/${recipe.id}`,
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Expose-Headers': 'Location',
-            'Access-Control-Allow-Credentials': true
+            ...corsHeaders
         }
     };
 };

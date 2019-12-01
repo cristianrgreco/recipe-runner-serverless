@@ -2,16 +2,16 @@ const {S3} = require('aws-sdk');
 const uuid = require('uuid/v1');
 const mime = require('mime-types');
 const {isTokenValid} = require('../auth');
+const corsHeaders = require('../cors-headers');
+
+const s3 = new S3();
 
 module.exports.handler = event => new Promise(async resolve => {
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {
         return {
             statusCode: 401,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Credentials': true,
-            }
+            headers: corsHeaders
         };
     }
 
@@ -24,14 +24,11 @@ module.exports.handler = event => new Promise(async resolve => {
         ContentType: contentType
     };
 
-    const uploadUrl = new S3().getSignedUrl('putObject', params);
+    const uploadUrl = s3.getSignedUrl('putObject', params);
 
     resolve({
         statusCode: 200,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
-        },
+        headers: corsHeaders,
         body: JSON.stringify({uploadUrl, filename})
     })
 });

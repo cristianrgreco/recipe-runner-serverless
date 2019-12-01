@@ -1,6 +1,7 @@
 const {isTokenValid} = require('../auth');
 const {connectToDatabase, getRecipeRepository} = require('../db');
 const {toRecipeDto} = require('../recipe-dto');
+const corsHeaders = require('../cors-headers');
 
 module.exports.handler = async event => {
     const recipeRepository = getRecipeRepository(await connectToDatabase());
@@ -11,10 +12,7 @@ module.exports.handler = async event => {
 
     return {
         statusCode: 200,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
-        },
+        headers: corsHeaders,
         body: JSON.stringify(recipeDtos)
     };
 };
