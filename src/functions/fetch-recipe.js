@@ -8,7 +8,15 @@ module.exports.handler = async event => {
     const token = await isTokenValid(event.headers.Authorization);
 
     const recipeId = event.pathParameters.recipeId;
+
     const recipe = await recipeRepository.find(recipeId);
+    if (!recipe) {
+        return {
+            statusCode: 404,
+            headers: corsHeaders,
+        };
+    }
+
     const recipeDto = toRecipeDto(token)(recipe);
 
     return {

@@ -16,7 +16,12 @@ module.exports.handler = async event => {
     const recipeId = event.pathParameters.recipeId;
 
     const recipe = await recipeRepository.find(recipeId);
-    if (token.email !== recipe.createdBy) {
+    if (!recipe) {
+        return {
+            statusCode: 404,
+            headers: corsHeaders
+        };
+    } else if (token.email !== recipe.createdBy) {
         return {
             statusCode: 403,
             headers: corsHeaders
