@@ -5,6 +5,12 @@ provider:
   runtime: nodejs12.x
   stage: prod
   region: eu-west-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+      Resource: 'arn:aws:s3:::recipe-runner-uploads/*'
   environment:
     DB_HOSTNAME: ${ssm:/db_hostname~true}
     DB_USERNAME: ${ssm:/db_username~true}
@@ -18,15 +24,39 @@ functions:
       - http:
           path: recipes/{recipeId}
           method: get
+          cors: true
   fetch-recipes:
     handler: src/handler.fetchRecipes
     events:
       - http:
           path: recipes
           method: get
+          cors: true
+  get-upload-url:
+    handler: src/handler.getUploadUrl
+    events:
+      - http:
+          path: upload-url
+          method: get
+          cors: true
+  create-recipe:
+    handler: src/handler.createRecipe
+    events:
+      - http:
+          path: recipes
+          method: post
+          cors: true
+  update-recipe:
+    handler: src/handler.updateRecipe
+    events:
+      - http:
+          path: recipes/{recipeId}
+          method: post
+          cors: true
   delete-recipe:
     handler: src/handler.deleteRecipe
     events:
       - http:
           path: recipes/{recipeId}
           method: delete
+          cors: true
