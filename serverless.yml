@@ -5,6 +5,13 @@ provider:
   runtime: nodejs12.x
   stage: prod
   region: eu-west-2
+  usagePlan:
+    quota:
+      limit: 10000
+      period: MONTH
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
   iamRoleStatements:
     - Effect: Allow
       Action:
