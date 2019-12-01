@@ -60,7 +60,6 @@ const getUploadUrl = event => new Promise(async resolve => {
     const contentType = event.queryStringParameters.contentType;
     const filename = `${uuid()}.${mime.extension(contentType)}`;
 
-    // TODO expiry, max size. Can probs remove serverless condition if we remove acl here
     const params = {
         Bucket: 'recipe-runner-uploads',
         Key: filename,

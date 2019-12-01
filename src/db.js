@@ -1,5 +1,5 @@
 const {MongoClient} = require('mongodb');
-const RecipeRepository = require('./RecipeRepository');
+const RecipeRepository = require('./recipe-repository');
 
 let cachedDatabase;
 
