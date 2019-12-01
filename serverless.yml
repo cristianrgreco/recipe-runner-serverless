@@ -9,7 +9,6 @@ provider:
     - Effect: Allow
       Action:
         - s3:PutObject
-        - s3:PutObjectAcl
       Resource: 'arn:aws:s3:::recipe-runner-uploads/*'
   environment:
     DB_HOSTNAME: ${ssm:/db_hostname~true}

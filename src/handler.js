@@ -64,8 +64,7 @@ const getUploadUrl = event => new Promise(async resolve => {
     const params = {
         Bucket: 'recipe-runner-uploads',
         Key: filename,
-        ContentType: contentType,
-        ACL: 'public-read',
+        ContentType: contentType
     };
 
     const uploadUrl = new S3().getSignedUrl('putObject', params);
