@@ -18,42 +18,42 @@ provider:
 
 functions:
   fetch-recipe:
-    handler: src/handler.fetchRecipe
+    handler: src/functions/fetch-recipe.handler
     events:
       - http:
           path: recipes/{recipeId}
           method: get
           cors: true
   fetch-recipes:
-    handler: src/handler.fetchRecipes
+    handler: src/functions/fetch-recipes.handler
     events:
       - http:
           path: recipes
           method: get
           cors: true
   get-upload-url:
-    handler: src/handler.getUploadUrl
+    handler: src/functions/get-upload-url.handler
     events:
       - http:
           path: upload-url
           method: get
           cors: true
   create-recipe:
-    handler: src/handler.createRecipe
+    handler: src/functions/create-recipe.handler
     events:
       - http:
           path: recipes
           method: post
           cors: true
   update-recipe:
-    handler: src/handler.updateRecipe
+    handler: src/functions/update-recipe.handler
     events:
       - http:
           path: recipes/{recipeId}
           method: post
           cors: true
   delete-recipe:
-    handler: src/handler.deleteRecipe
+    handler: src/functions/delete-recipe.handler
     events:
       - http:
           path: recipes/{recipeId}
