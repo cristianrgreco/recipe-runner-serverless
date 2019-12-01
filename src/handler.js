@@ -2,7 +2,7 @@ const {S3} = require('aws-sdk');
 const uuid = require('uuid/v1');
 const mime = require('mime-types');
 const {isTokenValid} = require('./auth');
-const {getDb, getRecipeRepository} = require('./db');
+const {connectToDatabase, getRecipeRepository} = require('./db');
 
 const toRecipeDto = token => recipe => ({
     ...recipe,
@@ -11,7 +11,7 @@ const toRecipeDto = token => recipe => ({
 });
 
 const fetchRecipe = async event => {
-    const recipeRepository = getRecipeRepository(await getDb());
+    const recipeRepository = getRecipeRepository(await connectToDatabase());
     const token = await isTokenValid(event.headers.Authorization);
 
     const recipeId = event.pathParameters.recipeId;
@@ -29,7 +29,7 @@ const fetchRecipe = async event => {
 };
 
 const fetchRecipes = async event => {
-    const recipeRepository = getRecipeRepository(await getDb());
+    const recipeRepository = getRecipeRepository(await connectToDatabase());
     const token = await isTokenValid(event.headers.Authorization);
 
     const recipes = await recipeRepository.findAll();
@@ -88,7 +88,7 @@ const recipeId = recipeName => {
 };
 
 const createRecipe = async event => {
-    const recipeRepository = getRecipeRepository(await getDb());
+    const recipeRepository = getRecipeRepository(await connectToDatabase());
 
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {
@@ -127,7 +127,7 @@ const createRecipe = async event => {
 };
 
 const updateRecipe = async event => {
-    const recipeRepository = getRecipeRepository(await getDb());
+    const recipeRepository = getRecipeRepository(await connectToDatabase());
 
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {
@@ -176,7 +176,7 @@ const updateRecipe = async event => {
 };
 
 const deleteRecipe = async event => {
-    const recipeRepository = getRecipeRepository(await getDb());
+    const recipeRepository = getRecipeRepository(await connectToDatabase());
 
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {

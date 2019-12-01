@@ -1,7 +1,13 @@
 const {MongoClient} = require('mongodb');
 const RecipeRepository = require('./RecipeRepository');
 
-const getDb = async () => {
+let cachedDatabase;
+
+const connectToDatabase = async () => {
+    if (cachedDatabase) {
+        return cachedDatabase;
+    }
+
     const hostname = process.env['DB_HOSTNAME'];
     const username = process.env['DB_USERNAME'];
     const password = process.env['DB_PASSWORD'];
@@ -12,7 +18,8 @@ const getDb = async () => {
     const client = new MongoClient(url, {useUnifiedTopology: true});
     await client.connect();
 
-    return client.db(database);
+    cachedDatabase = client.db(database);
+    return cachedDatabase;
 };
 
 const getRecipeRepository = db => {
@@ -21,6 +28,6 @@ const getRecipeRepository = db => {
 };
 
 module.exports = {
-    getDb,
+    connectToDatabase,
     getRecipeRepository
 };
