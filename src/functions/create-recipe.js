@@ -1,5 +1,6 @@
 const {isTokenValid} = require('../auth');
 const {connectToDatabase, getRecipeRepository} = require('../db');
+const {fromRecipeDto} = require('../recipe-dto');
 const corsHeaders = require('../cors-headers');
 
 const createRecipeId = recipeName => {
@@ -20,24 +21,24 @@ module.exports.handler = async event => {
         };
     }
 
-    const recipeDto = JSON.parse(event.body);
+    const recipe = fromRecipeDto(JSON.parse(event.body));
 
     const createdAt = new Date();
-    const id = `${createRecipeId(recipeDto.name)}-${createdAt.getTime()}`;
+    const recipeId = `${createRecipeId(recipe.name)}-${createdAt.getTime()}`;
 
-    const recipe = {
-        ...recipeDto,
-        id,
+    const newRecipe = {
+        ...recipe,
+        id: recipeId,
         createdAt: createdAt,
         createdBy: token.email,
     };
 
-    await recipeRepository.save(recipe);
+    await recipeRepository.save(newRecipe);
 
     return {
         statusCode: 201,
         headers: {
-            'Location': `/recipes/${recipe.id}`,
+            'Location': `/recipes/${recipeId}`,
             ...corsHeaders
         }
     };

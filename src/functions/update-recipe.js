@@ -1,5 +1,6 @@
 const {isTokenValid} = require('../auth');
 const {connectToDatabase, getRecipeRepository} = require('../db');
+const {fromRecipeDto} = require('../recipe-dto');
 const corsHeaders = require('../cors-headers');
 
 module.exports.handler = async event => {
@@ -15,18 +16,18 @@ module.exports.handler = async event => {
 
     const recipeId = event.pathParameters.recipeId;
 
-    const recipe = await recipeRepository.find(recipeId);
-    if (token.email !== recipe.createdBy) {
+    const existingRecipe = await recipeRepository.find(recipeId);
+    if (token.email !== existingRecipe.createdBy) {
         return {
             statusCode: 403,
             headers: corsHeaders
         };
     }
 
-    const recipeDto = JSON.parse(event.body);
+    const recipe = fromRecipeDto(JSON.parse(event.body));
 
     const updatedRecipe = {
-        ...recipeDto,
+        ...recipe,
         id: recipeId,
         updatedAt: new Date(),
         createdBy: token.email
