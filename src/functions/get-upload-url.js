@@ -6,7 +6,7 @@ const corsHeaders = require('../cors-headers');
 
 const s3 = new S3();
 
-module.exports.handler = event => new Promise(async resolve => {
+module.exports.handler = async event => {
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {
         return {
@@ -26,9 +26,9 @@ module.exports.handler = event => new Promise(async resolve => {
 
     const uploadUrl = s3.getSignedUrl('putObject', params);
 
-    resolve({
+    return {
         statusCode: 200,
         headers: corsHeaders,
         body: JSON.stringify({uploadUrl, filename})
-    })
-});
+    };
+};
