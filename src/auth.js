@@ -20,6 +20,7 @@ const getKey = (header, callback) => {
 
 const isTokenValid = token => new Promise(resolve => {
     if (!token) {
+        console.log('Token is missing');
         resolve(false);
         return;
     }
@@ -27,17 +28,21 @@ const isTokenValid = token => new Promise(resolve => {
     const parts = token.split(' ');
 
     if (parts.length !== 2) {
+        console.log('Token is invalid');
         resolve(false);
         return;
     }
 
     jwt.verify(parts[1], getKey, {algorithms: ['RS256']}, (err, decodedToken) => {
         if (err) {
+            console.log(`Token verification failed: ${err}`);
             resolve(false);
         } else {
             if (Object.entries(validations).some(([key, value]) => decodedToken[key] !== value)) {
+                console.log('Token validation failed');
                 resolve(false);
             } else {
+                console.log('Token is valid');
                 resolve({email: decodedToken.username});
             }
         }

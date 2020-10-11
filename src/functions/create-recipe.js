@@ -1,5 +1,5 @@
 const {isTokenValid} = require('../auth');
-const {connectToDatabase, getRecipeRepository} = require('../db');
+const {getRecipeRepository} = require('../db');
 const {fromRecipeDto} = require('../recipe-dto');
 const corsHeaders = require('../cors-headers');
 
@@ -11,10 +11,10 @@ const createRecipeId = recipeName => {
 };
 
 module.exports.handler = async event => {
-    const recipeRepository = getRecipeRepository(await connectToDatabase());
-
+    console.log('Create recipe');
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {
+        console.log('Unauthorised');
         return {
             statusCode: 401,
             headers: corsHeaders
@@ -33,7 +33,10 @@ module.exports.handler = async event => {
         createdBy: token.email,
     };
 
+    console.log('Creating recipe');
+    const recipeRepository = await getRecipeRepository();
     await recipeRepository.save(newRecipe);
+    console.log('Created recipe');
 
     return {
         statusCode: 201,

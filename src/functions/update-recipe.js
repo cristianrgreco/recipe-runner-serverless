@@ -1,28 +1,31 @@
 const {isTokenValid} = require('../auth');
-const {connectToDatabase, getRecipeRepository} = require('../db');
+const {getRecipeRepository} = require('../db');
 const {fromRecipeDto} = require('../recipe-dto');
 const corsHeaders = require('../cors-headers');
 
 module.exports.handler = async event => {
-    const recipeRepository = getRecipeRepository(await connectToDatabase());
-
+    console.log('Update recipe');
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {
+        console.log('Unauthorised');
         return {
             statusCode: 401,
             headers: corsHeaders
         };
     }
 
+    console.log('Looking for recipe to update');
     const recipeId = event.pathParameters.recipeId;
-
+    const recipeRepository = await getRecipeRepository();
     const existingRecipe = await recipeRepository.find(recipeId);
     if (!existingRecipe) {
+        console.log(`Recipe ${recipeId} does not exist`)
         return {
             statusCode: 404,
             headers: corsHeaders
         };
     } else if (token.email !== existingRecipe.createdBy) {
+        console.log('Forbidden');
         return {
             statusCode: 403,
             headers: corsHeaders
@@ -38,7 +41,9 @@ module.exports.handler = async event => {
         createdBy: token.email
     };
 
+    console.log('Updating recipe');
     await recipeRepository.update(recipeId, updatedRecipe);
+    console.log('Updated recipe');
 
     return {
         statusCode: 204,
