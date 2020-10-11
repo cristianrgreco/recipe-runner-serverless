@@ -48,7 +48,7 @@ describe("fetchRecipe", () => {
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
     const response = await handler({
       headers: {
-        Authorization: undefined,
+        Authorization: "Bearer VALID",
       },
       pathParameters: {
         recipeId: createRecipeLocation.split("/").pop(),
@@ -96,7 +96,7 @@ describe("fetchRecipe", () => {
 
     const response = await handler({
       headers: {
-        Authorization: undefined,
+        Authorization: "Bearer VALID",
       },
       pathParameters: {
         recipeId: createRecipeLocation.split("/").pop(),
