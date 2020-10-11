@@ -6,6 +6,7 @@ module.exports.handler = async (event) => {
   console.log("Delete recipe");
   const token = await isTokenValid(event.headers.Authorization);
   if (!token) {
+    console.log("Unauthorised");
     return {
       statusCode: 401,
       headers: corsHeaders,

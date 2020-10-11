@@ -19,7 +19,7 @@ describe("createRecipe", () => {
     });
   });
 
-  it("should create a new recipe", async () => {
+  it("should return created", async () => {
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
 
     const event = {
