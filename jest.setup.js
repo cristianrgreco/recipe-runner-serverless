@@ -1,3 +1,4 @@
+jest.mock("aws-sdk");
 jest.mock("./src/auth");
 jest.mock("./src/db-url");
 
