@@ -37,7 +37,8 @@ const getRecipeRepository = async () => {
     const collection = db.collection('recipes');
     console.log('Created recipe repository');
 
-    return new RecipeRepository(collection);
+    cachedRecipeRepository = new RecipeRepository(collection);
+    return cachedRecipeRepository;
 };
 
 module.exports = { getRecipeRepository };
