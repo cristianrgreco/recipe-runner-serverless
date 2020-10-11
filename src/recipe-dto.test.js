@@ -1,34 +1,32 @@
-const {toRecipeDto} = require('./recipe-dto');
+const { toRecipeDto } = require("./recipe-dto");
 
-describe('recipe-dto', () => {
+describe("recipe-dto", () => {
+  describe("toRecipeDto", () => {
+    it("should remove createdBy", () => {
+      const token = false;
+      const recipe = { createdBy: "user@domain.com" };
 
-   describe('toRecipeDto', () => {
+      const recipeDto = toRecipeDto(token)(recipe);
 
-       it('should remove createdBy', () => {
-           const token = false;
-           const recipe = {createdBy: 'user@domain.com'};
+      expect(recipeDto).toEqual({});
+    });
 
-           const recipeDto = toRecipeDto(token)(recipe);
+    it("should set isEditable if recipe is owned by logged in user", () => {
+      const token = { email: "user@domain.com" };
+      const recipe = { createdBy: "user@domain.com" };
 
-           expect(recipeDto).toEqual({});
-       });
+      const recipeDto = toRecipeDto(token)(recipe);
 
-       it('should set isEditable if recipe is owned by logged in user', () => {
-           const token = {email: 'user@domain.com'};
-           const recipe = {createdBy: 'user@domain.com'};
+      expect(recipeDto).toEqual({ isEditable: true });
+    });
 
-           const recipeDto = toRecipeDto(token)(recipe);
+    it("should unset isEditable if recipe is not owned by logged in user", () => {
+      const token = { email: "anotheruser@domain.com" };
+      const recipe = { createdBy: "user@domain.com" };
 
-           expect(recipeDto).toEqual({isEditable: true});
-       });
+      const recipeDto = toRecipeDto(token)(recipe);
 
-       it('should unset isEditable if recipe is not owned by logged in user', () => {
-           const token = {email: 'anotheruser@domain.com'};
-           const recipe = {createdBy: 'user@domain.com'};
-
-           const recipeDto = toRecipeDto(token)(recipe);
-
-           expect(recipeDto).toEqual({});
-       });
-   });
+      expect(recipeDto).toEqual({});
+    });
+  });
 });

@@ -15,12 +15,13 @@
     "mongodb": "^3.6.2"
   },
   "devDependencies": {
-    "jest": "^26.5.2",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.11.0",
     "husky": "^4.3.0",
+    "jest": "^26.5.2",
     "lint-staged": "^10.3.0",
-    "prettier": "^2.1.1"
+    "prettier": "^2.1.1",
+    "testcontainers": "^4.3.0"
   },
   "husky": {
     "hooks": {
@@ -28,7 +29,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.js": [
+    "{.eslintrc.js,jest.setup.js,jest.config.js,src/**/*.js}": [
       "prettier --write",
       "eslint --fix"
     ]
