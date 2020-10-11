@@ -1,6 +1,7 @@
 const { isTokenValid } = require("../auth");
 const { handler: createRecipeHandler } = require("./create-recipe");
 const { handler } = require("./delete-recipe");
+const { aRecipe, corsHeaders } = require("../test-helper");
 
 describe("deleteRecipe", () => {
   it("should return unauthorised when token is invalid", async () => {
@@ -12,11 +13,7 @@ describe("deleteRecipe", () => {
 
     expect(response).toEqual({
       statusCode: 401,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Expose-Headers": "Location",
-      },
+      headers: corsHeaders(),
     });
   });
 
@@ -32,11 +29,7 @@ describe("deleteRecipe", () => {
 
     expect(response).toEqual({
       statusCode: 404,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Expose-Headers": "Location",
-      },
+      headers: corsHeaders(),
     });
   });
 
@@ -48,16 +41,7 @@ describe("deleteRecipe", () => {
       headers: {
         Authorization: "Bearer VALID",
       },
-      body: JSON.stringify({
-        name: "Name",
-        image: "Image",
-        description: "Description",
-        serves: 4,
-        duration: 10000,
-        equipment: [],
-        ingredients: [],
-        method: [],
-      }),
+      body: JSON.stringify(aRecipe()),
     });
 
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
@@ -70,11 +54,7 @@ describe("deleteRecipe", () => {
 
     expect(response).toEqual({
       statusCode: 403,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Expose-Headers": "Location",
-      },
+      headers: corsHeaders(),
     });
   });
 
@@ -86,16 +66,7 @@ describe("deleteRecipe", () => {
       headers: {
         Authorization: "Bearer VALID",
       },
-      body: JSON.stringify({
-        name: "Name",
-        image: "Image",
-        description: "Description",
-        serves: 4,
-        duration: 10000,
-        equipment: [],
-        ingredients: [],
-        method: [],
-      }),
+      body: JSON.stringify(aRecipe()),
     });
 
     const response = await handler({
@@ -107,11 +78,7 @@ describe("deleteRecipe", () => {
 
     expect(response).toEqual({
       statusCode: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Expose-Headers": "Location",
-      },
+      headers: corsHeaders(),
     });
   });
 });

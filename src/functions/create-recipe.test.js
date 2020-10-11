@@ -1,5 +1,6 @@
 const { isTokenValid } = require("../auth");
 const { handler } = require("./create-recipe");
+const { aRecipe, corsHeaders } = require("../test-helper");
 
 describe("createRecipe", () => {
   it("should return unauthorised when token is invalid", async () => {
@@ -11,11 +12,7 @@ describe("createRecipe", () => {
 
     expect(response).toEqual({
       statusCode: 401,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Expose-Headers": "Location",
-      },
+      headers: corsHeaders(),
     });
   });
 
@@ -26,25 +23,14 @@ describe("createRecipe", () => {
       headers: {
         Authorization: "Bearer VALID",
       },
-      body: JSON.stringify({
-        name: "Name",
-        image: "Image",
-        description: "Description",
-        serves: 4,
-        duration: 10000,
-        equipment: [],
-        ingredients: [],
-        method: [],
-      }),
+      body: JSON.stringify(aRecipe()),
     });
 
     expect(response).toEqual({
       statusCode: 201,
       headers: {
+        ...corsHeaders(),
         Location: expect.stringMatching("/recipes/.+"),
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Expose-Headers": "Location",
       },
     });
   });

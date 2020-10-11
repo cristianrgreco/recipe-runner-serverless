@@ -1,6 +1,7 @@
 const { S3 } = require("aws-sdk");
 const { isTokenValid } = require("../auth");
 const { handler } = require("./get-upload-url");
+const { corsHeaders } = require("../test-helper");
 
 describe("getUploadUrl", () => {
   it("should return unauthorised when token is invalid", async () => {
@@ -12,11 +13,7 @@ describe("getUploadUrl", () => {
 
     expect(response).toEqual({
       statusCode: 401,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Expose-Headers": "Location",
-      },
+      headers: corsHeaders(),
     });
   });
 
@@ -34,11 +31,7 @@ describe("getUploadUrl", () => {
     });
 
     expect(response.statusCode).toEqual(200);
-    expect(response.headers).toEqual({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Expose-Headers": "Location",
-    });
+    expect(response.headers).toEqual(corsHeaders());
     expect(JSON.parse(response.body)).toEqual({
       uploadUrl: "http://upload-url.com",
       filename: expect.stringMatching(".+.png"),
