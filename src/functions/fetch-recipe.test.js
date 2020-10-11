@@ -1,7 +1,6 @@
 const { isTokenValid } = require("../auth");
-const { handler: createRecipeHandler } = require("./create-recipe");
 const { handler } = require("./fetch-recipe");
-const { aRecipe, corsHeaders } = require("../test-helper");
+const { aRecipe, createRecipe, corsHeaders } = require("../test-helper");
 
 describe("fetchRecipe", () => {
   it("should return not found when recipe does not exist", async () => {
@@ -24,9 +23,7 @@ describe("fetchRecipe", () => {
 
   it("should return ok and and not editable when recipe not owned by user", async () => {
     isTokenValid.mockResolvedValue({ email: "another-user@domain.com" });
-    const {
-      headers: { Location: createRecipeLocation },
-    } = await createRecipeHandler({ headers: { Authorization: "Bearer VALID" }, body: JSON.stringify(aRecipe()) });
+    const createdRecipeId = await createRecipe();
 
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
     const response = await handler({
@@ -34,7 +31,7 @@ describe("fetchRecipe", () => {
         Authorization: "Bearer VALID",
       },
       pathParameters: {
-        recipeId: createRecipeLocation.split("/").pop(),
+        recipeId: createdRecipeId,
       },
     });
 
@@ -48,15 +45,14 @@ describe("fetchRecipe", () => {
 
   it("should return ok and and editable when recipe owned by user", async () => {
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
-    const {
-      headers: { Location: createRecipeLocation },
-    } = await createRecipeHandler({ headers: { Authorization: "Bearer VALID" }, body: JSON.stringify(aRecipe()) });
+    const createdRecipeId = await createRecipe();
+
     const response = await handler({
       headers: {
         Authorization: "Bearer VALID",
       },
       pathParameters: {
-        recipeId: createRecipeLocation.split("/").pop(),
+        recipeId: createdRecipeId,
       },
     });
 

@@ -1,12 +1,11 @@
 const { isTokenValid } = require("../auth");
-const { handler: createRecipeHandler } = require("./create-recipe");
 const { handler } = require("./fetch-recipes");
-const { aRecipe, corsHeaders } = require("../test-helper");
+const { aRecipe, corsHeaders, createRecipe } = require("../test-helper");
 
 describe("fetchRecipes", () => {
   it("should return ok and and not editable when recipes not owned by user", async () => {
     isTokenValid.mockResolvedValue({ email: "another-user@domain.com" });
-    await createRecipeHandler({ headers: { Authorization: "Bearer VALID" }, body: JSON.stringify(aRecipe()) });
+    await createRecipe();
 
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
     const response = await handler({ headers: { Authorization: "Bearer VALID" } });
@@ -23,12 +22,7 @@ describe("fetchRecipes", () => {
 
   it("should return ok and and editable when recipes owned by user", async () => {
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
-    await createRecipeHandler({
-      headers: {
-        Authorization: "Bearer VALID",
-      },
-      body: JSON.stringify(aRecipe()),
-    });
+    await createRecipe();
 
     const response = await handler({ headers: { Authorization: "Bearer VALID" } });
 

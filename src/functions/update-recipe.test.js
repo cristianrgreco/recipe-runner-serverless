@@ -1,8 +1,7 @@
 const { isTokenValid } = require("../auth");
-const { handler: createRecipeHandler } = require("./create-recipe");
 const { handler: fetchRecipeHandler } = require("./fetch-recipe");
 const { handler } = require("./update-recipe");
-const { aRecipe, corsHeaders } = require("../test-helper");
+const { aRecipe, corsHeaders, createRecipe } = require("../test-helper");
 
 describe("updateRecipe", () => {
   it("should return unauthorised when token is invalid", async () => {
@@ -36,20 +35,13 @@ describe("updateRecipe", () => {
 
   it("should return forbidden when update recipe that is not owned by user", async () => {
     isTokenValid.mockResolvedValue({ email: "another-user@domain.com" });
-    const {
-      headers: { Location: createRecipeLocation },
-    } = await createRecipeHandler({
-      headers: {
-        Authorization: "Bearer VALID",
-      },
-      body: JSON.stringify(aRecipe()),
-    });
+    const createdRecipeId = await createRecipe();
 
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
     const response = await handler({
       headers: { Authorization: "Bearer VALID" },
       pathParameters: {
-        recipeId: createRecipeLocation.split("/").pop(),
+        recipeId: createdRecipeId,
       },
     });
 
@@ -61,13 +53,11 @@ describe("updateRecipe", () => {
 
   it("should return no content", async () => {
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
-    const {
-      headers: { Location: createRecipeLocation },
-    } = await createRecipeHandler({ headers: { Authorization: "Bearer VALID" }, body: JSON.stringify(aRecipe()) });
+    const createdRecipeId = await createRecipe();
 
     const response = await handler({
       headers: { Authorization: "Bearer VALID" },
-      pathParameters: { recipeId: createRecipeLocation.split("/").pop() },
+      pathParameters: { recipeId: createdRecipeId },
       body: JSON.stringify({ ...aRecipe(), name: "Updated name" }),
     });
 
@@ -83,7 +73,7 @@ describe("updateRecipe", () => {
         Authorization: "Bearer VALID",
       },
       pathParameters: {
-        recipeId: createRecipeLocation.split("/").pop(),
+        recipeId: createdRecipeId,
       },
     });
     expect(JSON.parse(fetchRecipeResponseBody)).toEqual({

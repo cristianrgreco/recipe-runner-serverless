@@ -1,3 +1,5 @@
+const { handler: createRecipeHandler } = require("./functions/create-recipe");
+
 const aRecipe = () => ({
   name: "Name",
   image: "Image",
@@ -15,7 +17,21 @@ const corsHeaders = () => ({
   "Access-Control-Expose-Headers": "Location",
 });
 
+const createRecipe = async () => {
+  const {
+    headers: { Location: createRecipeLocation },
+  } = await createRecipeHandler({
+    headers: {
+      Authorization: "Bearer VALID",
+    },
+    body: JSON.stringify(aRecipe()),
+  });
+
+  return createRecipeLocation.split("/").pop();
+};
+
 module.exports = {
   aRecipe,
   corsHeaders,
+  createRecipe,
 };

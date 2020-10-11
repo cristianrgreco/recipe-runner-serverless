@@ -1,7 +1,6 @@
 const { isTokenValid } = require("../auth");
-const { handler: createRecipeHandler } = require("./create-recipe");
 const { handler } = require("./delete-recipe");
-const { aRecipe, corsHeaders } = require("../test-helper");
+const { corsHeaders, createRecipe } = require("../test-helper");
 
 describe("deleteRecipe", () => {
   it("should return unauthorised when token is invalid", async () => {
@@ -35,20 +34,13 @@ describe("deleteRecipe", () => {
 
   it("should return forbidden when delete recipe that is not owned by user", async () => {
     isTokenValid.mockResolvedValue({ email: "another-user@domain.com" });
-    const {
-      headers: { Location: createRecipeLocation },
-    } = await createRecipeHandler({
-      headers: {
-        Authorization: "Bearer VALID",
-      },
-      body: JSON.stringify(aRecipe()),
-    });
+    const createdRecipeId = await createRecipe();
 
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
     const response = await handler({
       headers: { Authorization: "Bearer VALID" },
       pathParameters: {
-        recipeId: createRecipeLocation.split("/").pop(),
+        recipeId: createdRecipeId,
       },
     });
 
@@ -60,19 +52,12 @@ describe("deleteRecipe", () => {
 
   it("should return no content", async () => {
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
-    const {
-      headers: { Location: createRecipeLocation },
-    } = await createRecipeHandler({
-      headers: {
-        Authorization: "Bearer VALID",
-      },
-      body: JSON.stringify(aRecipe()),
-    });
+    const createdRecipeId = await createRecipe();
 
     const response = await handler({
       headers: { Authorization: "Bearer VALID" },
       pathParameters: {
-        recipeId: createRecipeLocation.split("/").pop(),
+        recipeId: createdRecipeId,
       },
     });
 
