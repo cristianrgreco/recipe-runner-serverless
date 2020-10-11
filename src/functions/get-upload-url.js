@@ -7,8 +7,10 @@ const corsHeaders = require('../cors-headers');
 const s3 = new S3();
 
 module.exports.handler = async event => {
+    console.log('Get upload URL');
     const token = await isTokenValid(event.headers.Authorization);
     if (!token) {
+        console.log('Unauthorised');
         return {
             statusCode: 401,
             headers: corsHeaders
@@ -24,7 +26,9 @@ module.exports.handler = async event => {
         ContentType: contentType
     };
 
+    console.log('Creating upload URL');
     const uploadUrl = s3.getSignedUrl('putObject', params);
+    console.log('Created upload URL');
 
     return {
         statusCode: 200,

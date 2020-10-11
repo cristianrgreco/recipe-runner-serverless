@@ -7,7 +7,7 @@ module.exports.handler = async event => {
     console.log('Fetch recipe');
     const token = await isTokenValid(event.headers.Authorization);
 
-    console.log(`Fetching recipe: ${token}`);
+    console.log(`Fetching recipe: ${token && token.email}`);
     const recipeId = event.pathParameters.recipeId;
     const recipeRepository = await getRecipeRepository();
     const recipe = await recipeRepository.find(recipeId);

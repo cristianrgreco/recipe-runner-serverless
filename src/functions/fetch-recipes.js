@@ -7,7 +7,7 @@ module.exports.handler = async event => {
     console.log('Fetch recipes');
     const token = await isTokenValid(event.headers.Authorization);
 
-    console.log(`Fetching recipes: ${token}`);
+    console.log(`Fetching recipes: ${token && token.email}`);
     const recipeRepository = await getRecipeRepository();
     const recipes = await recipeRepository.findAll();
 
