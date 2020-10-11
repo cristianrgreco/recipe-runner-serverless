@@ -9,12 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.580.0",
+    "aws-sdk": "^2.771.0",
     "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^1.6.0",
-    "mongodb": "^3.3.5"
+    "jwks-rsa": "^1.10.1",
+    "mongodb": "^3.6.2"
   },
   "devDependencies": {
-    "jest": "^24.9.0"
+    "jest": "^26.5.2"
   }
 }
