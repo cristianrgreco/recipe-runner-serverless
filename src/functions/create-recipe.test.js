@@ -22,7 +22,7 @@ describe("createRecipe", () => {
   it("should return created", async () => {
     isTokenValid.mockResolvedValue({ email: "user@domain.com" });
 
-    const event = {
+    const response = await handler({
       headers: {
         Authorization: "Bearer VALID",
       },
@@ -36,8 +36,7 @@ describe("createRecipe", () => {
         ingredients: [],
         method: [],
       }),
-    };
-    const response = await handler(event);
+    });
 
     expect(response).toEqual({
       statusCode: 201,
