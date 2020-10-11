@@ -1,4 +1,4 @@
-const {toRecipeDto} = require('../src/recipe-dto');
+const {toRecipeDto} = require('./recipe-dto');
 
 describe('recipe-dto', () => {
 
