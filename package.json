@@ -14,7 +14,9 @@
     "aws-sdk": "^2.771.0",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.10.1",
-    "mongodb": "^3.6.2"
+    "mime-types": "^2.1.27",
+    "mongodb": "^3.6.2",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
