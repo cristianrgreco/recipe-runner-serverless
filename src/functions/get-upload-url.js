@@ -1,5 +1,5 @@
 const { S3 } = require("aws-sdk");
-const uuid = require("uuid/v1");
+const { v1: uuid } = require("uuid");
 const mime = require("mime-types");
 const { isTokenValid } = require("../auth");
 const corsHeaders = require("../cors-headers");
