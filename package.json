@@ -5,7 +5,8 @@
   "scripts": {
     "test": "cross-env jest src",
     "format": "prettier --write 'src/**/*.js'",
-    "lint": "eslint --fix 'src/**/*.js'"
+    "lint": "eslint --fix 'src/**/*.js'",
+    "deploy": "sls deploy"
   },
   "keywords": [],
   "author": "",
