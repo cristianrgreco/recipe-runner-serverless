@@ -11,9 +11,18 @@ describe("recipe-dto", () => {
       expect(recipeDto).toEqual({});
     });
 
+    it("should set isEditable if logged in user is admin", () => {
+      const token = { id: "id1", isAdmin: true };
+      const recipe = { createdBy: "id2" };
+
+      const recipeDto = toRecipeDto(token)(recipe);
+
+      expect(recipeDto).toEqual({ isEditable: true });
+    });
+
     it("should set isEditable if recipe is owned by logged in user", () => {
-      const token = { email: "user@domain.com" };
-      const recipe = { createdBy: "user@domain.com" };
+      const token = { id: "id1" };
+      const recipe = { createdBy: "id1" };
 
       const recipeDto = toRecipeDto(token)(recipe);
 
@@ -21,8 +30,8 @@ describe("recipe-dto", () => {
     });
 
     it("should unset isEditable if recipe is not owned by logged in user", () => {
-      const token = { email: "anotheruser@domain.com" };
-      const recipe = { createdBy: "user@domain.com" };
+      const token = { id: "id1" };
+      const recipe = { createdBy: "id2" };
 
       const recipeDto = toRecipeDto(token)(recipe);
 

@@ -24,7 +24,7 @@ module.exports.handler = async (event) => {
       statusCode: 404,
       headers: corsHeaders,
     };
-  } else if (token.email !== existingRecipe.createdBy) {
+  } else if (!token.isAdmin && token.id !== existingRecipe.createdBy) {
     console.log("Forbidden");
     return {
       statusCode: 403,
@@ -38,7 +38,7 @@ module.exports.handler = async (event) => {
     ...recipe,
     id: recipeId,
     updatedAt: new Date(),
-    createdBy: token.email,
+    createdBy: token.id,
   };
 
   console.log("Updating recipe");

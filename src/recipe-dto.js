@@ -10,7 +10,7 @@ const toRecipeDto = (token) => (recipe) => ({
   ingredients: recipe.ingredients,
   method: recipe.method,
   createdBy: undefined,
-  isEditable: (token && token.email === recipe.createdBy) || undefined,
+  isEditable: (token && (token.isAdmin || token.id === recipe.createdBy)) || undefined,
 });
 
 const fromRecipeDto = (recipeDto) => ({

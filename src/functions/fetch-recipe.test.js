@@ -22,10 +22,10 @@ describe("fetchRecipe", () => {
   });
 
   it("should return ok and and not editable when recipe not owned by user", async () => {
-    isTokenValid.mockResolvedValue({ email: "another-user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id2" });
     const createdRecipeId = await createRecipe();
 
-    isTokenValid.mockResolvedValue({ email: "user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id1" });
     const response = await handler({
       headers: {
         Authorization: "Bearer VALID",
@@ -44,7 +44,7 @@ describe("fetchRecipe", () => {
   });
 
   it("should return ok and and editable when recipe owned by user", async () => {
-    isTokenValid.mockResolvedValue({ email: "user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id1" });
     const createdRecipeId = await createRecipe();
 
     const response = await handler({

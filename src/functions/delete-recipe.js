@@ -15,15 +15,17 @@ module.exports.handler = async (event) => {
 
   const recipeId = event.pathParameters.recipeId;
   const recipeRepository = await getRecipeRepository();
+
   console.log("Looking for recipe to delete");
   const recipe = await recipeRepository.find(recipeId);
+
   if (!recipe) {
     console.log(`Recipe ${recipeId} not found`);
     return {
       statusCode: 404,
       headers: corsHeaders,
     };
-  } else if (token.email !== recipe.createdBy) {
+  } else if (!token.isAdmin && token.id !== recipe.createdBy) {
     console.log("Forbidden");
     return {
       statusCode: 403,

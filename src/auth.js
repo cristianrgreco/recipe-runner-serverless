@@ -44,7 +44,12 @@ const isTokenValid = (token) =>
           resolve(false);
         } else {
           console.log("Token is valid");
-          resolve({ email: decodedToken.username });
+          const groups = decodedToken["cognito:groups"] || [];
+          resolve({
+            id: decodedToken.sub,
+            email: decodedToken.username,
+            isAdmin: groups.includes("Admin"),
+          });
         }
       }
     });

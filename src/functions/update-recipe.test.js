@@ -18,7 +18,7 @@ describe("updateRecipe", () => {
   });
 
   it("should return not found when update recipe that does not exist", async () => {
-    isTokenValid.mockResolvedValue({ email: "user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id1" });
 
     const response = await handler({
       headers: { Authorization: "Bearer VALID" },
@@ -34,10 +34,10 @@ describe("updateRecipe", () => {
   });
 
   it("should return forbidden when update recipe that is not owned by user", async () => {
-    isTokenValid.mockResolvedValue({ email: "another-user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id2" });
     const createdRecipeId = await createRecipe();
 
-    isTokenValid.mockResolvedValue({ email: "user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id1" });
     const response = await handler({
       headers: { Authorization: "Bearer VALID" },
       pathParameters: {
@@ -51,8 +51,28 @@ describe("updateRecipe", () => {
     });
   });
 
+  it("should return no content when update recipe as admin user", async () => {
+    isTokenValid.mockResolvedValue({ id: "id2" });
+    const createdRecipeId = await createRecipe();
+
+    isTokenValid.mockResolvedValue({ id: "id1", isAdmin: true });
+    const response = await handler({
+      headers: { Authorization: "Bearer VALID" },
+      pathParameters: { recipeId: createdRecipeId },
+      body: JSON.stringify({ ...aRecipe(), name: "Updated name" }),
+    });
+
+    expect(response).toEqual({
+      statusCode: 204,
+      headers: {
+        ...corsHeaders(),
+        Location: expect.stringMatching("/recipes/.+"),
+      },
+    });
+  });
+
   it("should return no content", async () => {
-    isTokenValid.mockResolvedValue({ email: "user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id1" });
     const createdRecipeId = await createRecipe();
 
     const response = await handler({

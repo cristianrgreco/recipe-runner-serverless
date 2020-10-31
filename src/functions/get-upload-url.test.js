@@ -19,7 +19,7 @@ describe("getUploadUrl", () => {
 
   it("should return ok and the upload url and filename", async () => {
     S3.prototype.getSignedUrl.mockReturnValue("http://upload-url.com");
-    isTokenValid.mockResolvedValue({ email: "user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id1" });
 
     const response = await handler({
       headers: {

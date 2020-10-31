@@ -30,7 +30,7 @@ module.exports.handler = async (event) => {
     ...recipe,
     id: recipeId,
     createdAt: createdAt,
-    createdBy: token.email,
+    createdBy: token.id,
   };
 
   console.log("Creating recipe");

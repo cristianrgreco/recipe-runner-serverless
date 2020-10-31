@@ -17,7 +17,7 @@ describe("createRecipe", () => {
   });
 
   it("should return created", async () => {
-    isTokenValid.mockResolvedValue({ email: "user@domain.com" });
+    isTokenValid.mockResolvedValue({ id: "id1" });
 
     const response = await handler({
       headers: {
