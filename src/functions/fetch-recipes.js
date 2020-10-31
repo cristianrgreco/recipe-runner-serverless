@@ -9,7 +9,7 @@ module.exports.handler = async (event) => {
 
   console.log(`Fetching recipes: ${token && token.email}`);
   const recipeRepository = await getRecipeRepository();
-  const recipes = await recipeRepository.findAll();
+  const recipes = (await recipeRepository.findAll()).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
   console.log("Recipes found");
   const recipeDtos = recipes.map(toRecipeDto(token));

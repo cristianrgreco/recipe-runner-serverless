@@ -21,7 +21,7 @@ describe("fetchRecipe", () => {
     });
   });
 
-  it("should return ok and and not editable when recipe not owned by user", async () => {
+  it("should return ok and not editable when recipe not owned by user", async () => {
     isTokenValid.mockResolvedValue({ id: "id2" });
     const createdRecipeId = await createRecipe();
 
@@ -43,7 +43,30 @@ describe("fetchRecipe", () => {
     });
   });
 
-  it("should return ok and and editable when recipe owned by user", async () => {
+  it("should return ok and editable when user is admin", async () => {
+    isTokenValid.mockResolvedValue({ id: "id2" });
+    const createdRecipeId = await createRecipe();
+
+    isTokenValid.mockResolvedValue({ id: "id1", isAdmin: true });
+    const response = await handler({
+      headers: {
+        Authorization: "Bearer VALID",
+      },
+      pathParameters: {
+        recipeId: createdRecipeId,
+      },
+    });
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.headers).toEqual(corsHeaders());
+    expect(JSON.parse(response.body)).toEqual({
+      ...aRecipe(),
+      id: expect.stringMatching("name-[0-9]+"),
+      isEditable: true,
+    });
+  });
+
+  it("should return ok and editable when recipe owned by user", async () => {
     isTokenValid.mockResolvedValue({ id: "id1" });
     const createdRecipeId = await createRecipe();
 
