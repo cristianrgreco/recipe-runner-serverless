@@ -3,6 +3,7 @@ const { handler: createRecipeHandler } = require("./functions/create-recipe");
 const aRecipe = () => ({
   name: "Name",
   image: "Image",
+  imageThumbnail: "ImageThumbnail",
   description: "Description",
   serves: 4,
   duration: 10000,
