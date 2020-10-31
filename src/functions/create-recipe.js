@@ -29,7 +29,7 @@ module.exports.handler = async (event) => {
   const newRecipe = {
     ...recipe,
     id: recipeId,
-    createdAt: createdAt,
+    createdAt,
     createdBy: token.id,
   };
 

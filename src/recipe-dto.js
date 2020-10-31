@@ -24,6 +24,7 @@ const fromRecipeDto = (recipeDto) => ({
   equipment: recipeDto.equipment,
   ingredients: recipeDto.ingredients,
   method: recipeDto.method,
+  createdAt: recipeDto.createdAt,
 });
 
 module.exports = {
